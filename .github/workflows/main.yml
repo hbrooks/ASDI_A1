@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: DeployToAws
+
+on:
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  synth-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: NPM Install
+        run: npm install
+
+      - name: Install CDK
+        run: npm install -g aws-cdk@1.98.0 
+      
+      - name: Synth CDK
+        run: |
+          cdk synth --output build/cdk.out --verbose
+        env:
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # TODO: Add a cdk bootstrap command.  See https://www.npmjs.com/package/aws-cdk#cdk-bootstrap
+
+      - name: Deploy CDK
+        run: |
+          cdk deploy --app ./build/cdk.out --require-approval never "*" --verbose
+        if: github.ref == 'refs/heads/master'
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
