@@ -45,7 +45,7 @@
 from flask import Flask
 app = Flask(__name__)
 
-@app.route('/healthCheck', method=['GET'])
+@app.route('/healthCheck', methods=['GET'])
 def hello_world():
     return {"isHealthy": True,}
 
