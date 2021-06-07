@@ -1,3 +1,2 @@
-awslambdaric
 requests
-# psycopg2
+Flask

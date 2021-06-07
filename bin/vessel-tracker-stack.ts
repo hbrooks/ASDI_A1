@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from '@aws-cdk/core';
-import { OrderServiceStack } from '../lib/order-service-stack';
+import { VesselTrackerStack } from '../lib/vessel-tracker-stack';
 
 const app = new cdk.App();
-new OrderServiceStack(app, 'OrderServiceStack');
+new VesselTrackerStack(app, 'VesselTrackerStack');

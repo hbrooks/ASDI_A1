@@ -1,13 +1,17 @@
+
 FROM python:3.9.5-slim
 
-# RUN apt-get update \
-#     && apt-get -y install libpq-dev gcc
+RUN apt-get update 
 
-COPY ./requirements.txt ./requirements.txt
-RUN pip install -r ./requirements.txt
+RUN mkdir /usr/src/vessel_tracker_service
+WORKDIR /usr/src/vessel_tracker_service
 
-COPY lambda_handler.py   ./lambda_handler
-COPY src/   ./
+RUN pip install --upgrade pip
+COPY vessel_tracker_service/requirements.txt /usr/src/vessel_tracker_service/requirements.txt
+RUN pip3 install -r /usr/src/vessel_tracker_service/requirements.txt
 
-ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
-CMD [ "lambda_handler.handler" ]
+WORKDIR /usr/src/vessel_tracker_service/src
+
+ENTRYPOINT [ "python" ]
+
+CMD [ "app.py" ]

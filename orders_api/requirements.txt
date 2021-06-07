@@ -1,3 +1,0 @@
-awslambdaric
-requests
-psycopg2
