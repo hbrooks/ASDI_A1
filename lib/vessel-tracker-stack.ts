@@ -2,48 +2,51 @@ import * as path from 'path';
 
 
 import * as cdk from "@aws-cdk/core";
-import * as elbv2 from "@aws-cdk/aws-elasticloadbalancingv2";
+import * as s3 from "@aws-cdk/aws-s3";
 import * as ec2 from "@aws-cdk/aws-ec2";
 import * as ecs from "@aws-cdk/aws-ecs";
-import * as ecr from "@aws-cdk/aws-ecr";
 import * as ecs_patterns from "@aws-cdk/aws-ecs-patterns";
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
-import * as ecrdeploy from '@aws-cdk/aws-ecr-assets';
-import * as servicediscovery from "@aws-cdk/aws-servicediscovery";
+import { RemovalPolicy } from '@aws-cdk/core';
 
 export class VesselTrackerStack extends cdk.Stack {
   /**
    * See https://github.com/aws-samples/http-api-aws-fargate-cdk.
    */
   
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+  constructor(scope: cdk.App, id: string, disambiguator: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const vpc = new ec2.Vpc(this, "MyVpc", {
+    const vpc = new ec2.Vpc(this, "Vessel Service VPC", {
       maxAzs: 2 // Default is all AZs in region
     });
 
-    const cluster = new ecs.Cluster(this, "MyCluster", {
-      vpc: vpc
+    const cluster = new ecs.Cluster(this, "Vessel Service ECS", {
+      vpc: vpc,
     });
 
-    const image = new DockerImageAsset(this, 'MyBuildImage', {
+    const image = new DockerImageAsset(this, 'Vessel Service Docker Image', {
       directory: path.join(__dirname, '..', 'vessel_tracker_service')
     });
 
-    // new ecrdeploy.ECRDeployment(this, 'DeployDockerImage', {
-    //   src: new ecrdeploy.DockerImageName(image.imageUri),
-    //   dest: new ecrdeploy.DockerImageName(`${cdk.Aws.ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com`),
-    // });
-
     // Create a load-balanced Fargate service and make it public
-    new ecs_patterns.ApplicationLoadBalancedFargateService(this, "MyFargateService", {
+    const vesselService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "Vessel Service", {
       cluster: cluster, // Required
       cpu: 256, // Default is 256
-      desiredCount: 2, // Default is 1
-      taskImageOptions: { image: ecs.ContainerImage.fromDockerImageAsset(image)},
+      desiredCount: 1, // Default is 1
+      taskImageOptions: { 
+        image: ecs.ContainerImage.fromDockerImageAsset(image),
+        containerPort: 5000,
+      },
       memoryLimitMiB: 512, // Default is 512
-      publicLoadBalancer: true // Default is false
+      publicLoadBalancer: true, // Default is false
+      serviceName: 'VesselService-' + disambiguator,
     });
+
+    const bucket = new s3.Bucket(this, 'Vessel Bucket', {
+      bucketName: 'tpi-vessel-bucket-' + disambiguator, 
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+    bucket.grantReadWrite(vesselService.taskDefinition.taskRole);
   }
 }

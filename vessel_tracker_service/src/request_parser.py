@@ -1,17 +1,17 @@
 from typing import Dict
 from typing import List
 
+from werkzeug.exceptions import UnprocessableEntity
 
-from vessel_tracker_service.src.trip_update import TripUpdate
-from vessel_tracker_service.src.trip_status import TripStatus
-from vessel_tracker_service.src.cargo_entry import CargoEntry
-from vessel_tracker_service.src.unprocessable_entity_exception import UnprocessableEntityException
+from .trip_update import TripUpdate
+from .trip_status import TripStatus
+from .cargo_entry import CargoEntry
 
 
 class RequestParser:
 
 
-    def parse_aws_lambda_event(self, dictionary_of_request_body: Dict) -> TripUpdate:
+    def parse_trip_update_event(self, dictionary_of_request_body: Dict) -> TripUpdate:
         vessel_cargo: List[CargoEntry] = []
         try:
             origin_port = dictionary_of_request_body['originPort']
@@ -20,13 +20,13 @@ class RequestParser:
             status = TripStatus[dictionary_of_request_body['status']]
             cargo_in_request = dictionary_of_request_body['cargo']
         except KeyError:
-            raise UnprocessableEntityException()
+            raise UnprocessableEntity()
         try:
             for cargo_entry in cargo_in_request:
                 assert isinstance(cargo_entry, Dict)
                 vessel_cargo.append(self._parse_cargo_entry(cargo_entry))
         except AssertionError:
-            raise UnprocessableEntityException()
+            raise UnprocessableEntity()
         
         return TripUpdate(
             origin_port,
@@ -40,4 +40,5 @@ class RequestParser:
         return CargoEntry(
             dictionary_of_cargo_entry['item_id'],
             dictionary_of_cargo_entry['quanity'],
+            dictionary_of_cargo_entry['type'],
         )

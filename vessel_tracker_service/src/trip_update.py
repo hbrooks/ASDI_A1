@@ -2,8 +2,8 @@ from typing import List
 from typing import Dict
 
 
-from vessel_tracker_service.src.trip_status import TripStatus
-from vessel_tracker_service.src.cargo_entry import CargoEntry
+from .trip_status import TripStatus
+from .cargo_entry import CargoEntry
 
 
 class TripUpdate:

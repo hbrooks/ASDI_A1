@@ -29,6 +29,7 @@
     "@aws-cdk/aws-ecs-patterns": "1.98.0",
     "@aws-cdk/aws-lambda": "1.98.0",
     "@aws-cdk/aws-rds": "1.98.0",
+    "@aws-cdk/aws-s3": "1.98.0",
     "@aws-cdk/aws-servicediscovery": "1.98.0",
     "@aws-cdk/aws-sns": "1.98.0",
     "@aws-cdk/aws-sns-subscriptions": "1.98.0",
