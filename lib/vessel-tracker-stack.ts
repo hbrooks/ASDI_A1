@@ -2,12 +2,10 @@ import * as path from 'path';
 
 
 import * as cdk from "@aws-cdk/core";
-import * as s3 from "@aws-cdk/aws-s3";
 import * as ec2 from "@aws-cdk/aws-ec2";
 import * as ecs from "@aws-cdk/aws-ecs";
 import * as ecs_patterns from "@aws-cdk/aws-ecs-patterns";
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
-import { RemovalPolicy } from '@aws-cdk/core';
 
 export class VesselTrackerStack extends cdk.Stack {
   /**
@@ -15,7 +13,7 @@ export class VesselTrackerStack extends cdk.Stack {
    */
   
   constructor(scope: cdk.App, id: string, disambiguator: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    super(scope, id+'-'+disambiguator, props);
 
     const vpc = new ec2.Vpc(this, "Vessel Service VPC", {
       maxAzs: 2 // Default is all AZs in region
@@ -38,15 +36,11 @@ export class VesselTrackerStack extends cdk.Stack {
         image: ecs.ContainerImage.fromDockerImageAsset(image),
         containerPort: 5000,
       },
+      minHealthyPercent: 50, 
+      maxHealthyPercent: 200,
       memoryLimitMiB: 512, // Default is 512
       publicLoadBalancer: true, // Default is false
       serviceName: 'VesselService-' + disambiguator,
     });
-
-    const bucket = new s3.Bucket(this, 'Vessel Bucket', {
-      bucketName: 'tpi-vessel-bucket-' + disambiguator, 
-      removalPolicy: RemovalPolicy.DESTROY,
-    });
-    bucket.grantReadWrite(vesselService.taskDefinition.taskRole);
   }
 }
