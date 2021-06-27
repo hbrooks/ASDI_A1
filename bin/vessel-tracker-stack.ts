@@ -16,7 +16,7 @@ new VesselTrackerStack(app, 'VesselTracker', tpiPublicInterviewId, {
     tags: {
         'is_candidate_owned': 'true',
         'tpi_app_name': 'VesselTracker',
-        // 'tpi_public_interview_id': tpiPublicInterviewId,
+        'tpi_public_interview_id': tpiPublicInterviewId,
     },
     terminationProtection: false,
 });
