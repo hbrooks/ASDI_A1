@@ -20,6 +20,7 @@ export class VesselTrackerStack extends cdk.Stack {
       code: lambdaImage,
       handler: Handler.FROM_IMAGE,
       runtime: Runtime.FROM_IMAGE,
+      timeout: cdk.Duration.seconds(10),
     });
 
     const api = new apigateway.RestApi(this, "Rest API GW", {
@@ -39,7 +40,7 @@ export class VesselTrackerStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "SetOutput", {
       value: api.url,
-      exportName: "ApiUrl",
+      exportName: `ApiUrl-{disambiguator}`,
     });
 
 
