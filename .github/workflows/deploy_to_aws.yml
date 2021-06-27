@@ -2,13 +2,10 @@ name: deploy_to_aws
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-  # Allows this workflow to run when the repo gets forked.
-  # fork:
 
 jobs:
   synth-and-deploy:
@@ -34,7 +31,7 @@ jobs:
           AWS_REGION: us-east-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # TODO: Add env var for TPI interview ID.
+          TPI_PUBLIC_INTERVIEW_ID: ${{ secrets.TPI_PUBLIC_INTERVIEW_ID }}
 
       # TODO: Add a cdk bootstrap command.  See https://www.npmjs.com/package/aws-cdk#cdk-bootstrap
 
@@ -45,3 +42,5 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TPI_PUBLIC_INTERVIEW_ID: ${{ secrets.TPI_PUBLIC_INTERVIEW_ID }}
+
