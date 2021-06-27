@@ -44,7 +44,8 @@ export class VesselTrackerStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, "ApiUrl", {
-      value: vesselService.loadBalancer.loadBalancerDnsName
+      // TODO: Fix this hacky addition of "http://"
+      value: 'http://' + vesselService.loadBalancer.loadBalancerDnsName
     });
 
   }
