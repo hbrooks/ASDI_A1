@@ -29,8 +29,8 @@ jobs:
           cdk synth --output build/cdk.out --verbose
         env:
           CDK_DEFAULT_REGION: us-east-1
-          AMAZON_ACCESS_KEY_ID: ${{ secrets.AMAZON_ACCESS_KEY_ID }}
-          AMAZON_SECRET_ACCESS_KEY: ${{ secrets.AMAZON_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TPI_PUBLIC_INTERVIEW_ID: ${{ secrets.TPI_PUBLIC_INTERVIEW_ID }}
 
       # TODO: Add a cdk bootstrap command.  See https://www.npmjs.com/package/aws-cdk#cdk-bootstrap
@@ -40,7 +40,7 @@ jobs:
           cdk deploy --app ./build/cdk.out --require-approval never "*" --verbose
         env:
           CDK_DEFAULT_REGION: us-east-1
-          AMAZON_ACCESS_KEY_ID: ${{ secrets.AMAZON_ACCESS_KEY_ID }}
-          AMAZON_SECRET_ACCESS_KEY: ${{ secrets.AMAZON_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TPI_PUBLIC_INTERVIEW_ID: ${{ secrets.TPI_PUBLIC_INTERVIEW_ID }}
 
