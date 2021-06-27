@@ -40,7 +40,7 @@ export class VesselTrackerStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "SetOutput", {
       value: api.url,
-      exportName: `ApiUrl-{disambiguator}`,
+      exportName: `ApiUrl-${disambiguator}`,
     });
 
 
