@@ -35,11 +35,11 @@ export class VesselTrackerStack extends cdk.Stack {
     healthResource.addMethod("GET", lambdaIntegration); // Adds GET /health
 
     const tripResource = api.root.addResource("trip")
-    healthResource.addMethod("POST", lambdaIntegration); // Adds POST /trip
+    tripResource.addMethod("POST", lambdaIntegration); // Adds POST /trip
 
     new cdk.CfnOutput(this, "SetOutput", {
       value: api.url,
-      exportName: "API_URL",
+      exportName: "ApiUrl",
     });
 
 
