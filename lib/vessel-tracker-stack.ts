@@ -12,7 +12,7 @@ export class VesselTrackerStack extends cdk.Stack {
    */
   
   constructor(scope: cdk.App, id: string, disambiguator: string, props?: cdk.StackProps) {
-    super(scope, id+'-'+disambiguator, props);
+    super(scope, id + '-' + disambiguator, props);
 
     const lambdaImage = EcrImageCode.fromAssetImage(path.join(__dirname, '..', 'vessel_tracker_service'));
 
