@@ -17,12 +17,12 @@ request_parser = RequestParser()
 flask_app = Flask(__name__)
 
 
-@flask_app.route('/healthCheck', methods=['GET'])
+@flask_app.route('/health', methods=['GET'])
 def handle_health_check():
     return {"isHealthy": True,}, 200
 
 
-@flask_app.route('/tripUpdate', methods=['POST'])
+@flask_app.route('/trip', methods=['POST'])
 def handle_trip_update():
     update: TripUpdate = request_parser.parse_trip_update_event(request.body)
     return update.to_dict(), 200
