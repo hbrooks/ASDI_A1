@@ -1,0 +1,1 @@
+Thank you to https://pritul95.github.io/blogs/aws/2020/12/25/flask-aws-containerized-lambda/.
